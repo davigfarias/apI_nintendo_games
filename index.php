@@ -17,12 +17,29 @@ $router->namespace('Src\Controllers');
 $router->get("/", "IndexController:info");
 $router->get("/titles", "TitlesController:titles");
 $router->get("/titles/{console}", "TitlesController:searchByConsole");
-// $router->get("/list", "TitlesController:titles");
 $router->get("/consoles", "TitlesController:consolesOnly");
 
 $router->dispatch();
 
 if($router->error())
 {
-    var_dump($router->error());
+    if($router->error() === 400)
+    {
+        echo json_encode(['error' => 'Bad Request']);
+    }
+
+    if($router->error() === 404)
+    {
+        echo json_encode(['error' => 'Not Found!']);
+    }
+
+    if($router->error() === 405)
+    {
+        echo json_encode(['error' => 'Method not yet allowed']);
+    }
+
+    if($router->error() === 501)
+    {
+        echo json_encode(['error' => 'Sorry, it was not implemented yet!']);
+    }
 }
