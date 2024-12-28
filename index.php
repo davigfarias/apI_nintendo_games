@@ -16,8 +16,9 @@ $router->namespace('Src\Controllers');
 
 $router->get("/", "IndexController:info");
 $router->get("/titles", "TitlesController:titles");
+$router->get("/titles/{console}", "TitlesController:searchByConsole");
 // $router->get("/list", "TitlesController:titles");
-$router->get("/consoles", "TitlesController:consoles");
+$router->get("/consoles", "TitlesController:consolesOnly");
 
 $router->dispatch();
 
