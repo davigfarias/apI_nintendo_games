@@ -12,14 +12,6 @@ $router = new Router("http://localhost/PHP%20Projects/api_nintendo");
 
 $router->namespace('Src\Controllers');
 
-/**
- * Modifications:
- * 1. place the name API and the Version on the routes; OK
- * 2. study a possibility to include a caching middleware system to speed things up and free up resoureces;
- * 3. place pagination over the API via limit and offset parameters
- * 4. create a response object to handle all the responses from the server;
- */
-
 $router->get("/api/v1/", "IndexController:info");
 $router->get("/api/v1/titles", "TitlesController:titles");
 $router->get("/api/v1/titles/{console}", "TitlesController:searchByConsole");
