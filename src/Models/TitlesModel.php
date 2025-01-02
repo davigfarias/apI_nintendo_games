@@ -20,7 +20,7 @@ class TitlesModel extends BaseModel
 
     public function getConsoles()
     {
-        $results = $this->read(select: "DISTINCT(platform) as Console", from: $this->table)
+        $results = $this->read(select: "DISTINCT(platform) as Console", from: $this->table);
         $structure = $this->createConsolesStructure($results);
         
         return new Wrapper(data: $structure);
