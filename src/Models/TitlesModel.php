@@ -10,7 +10,7 @@ class TitlesModel extends BaseModel
 {
     protected string $table = "nintendo_games";
 
-    public function getAll()
+    public function getAll(): object
     {
         $results = $this->read(select: "title AS Game_Name, platform AS Console, date AS Year", from: $this->table);
         $structure = $this->createGameStructure($results);
@@ -18,7 +18,7 @@ class TitlesModel extends BaseModel
         return new Wrapper(data: $structure);
     }
 
-    public function getConsoles()
+    public function getConsoles(): object
     {
         $results = $this->read(select: "DISTINCT(platform) as Console", from: $this->table);
         $structure = $this->createConsolesStructure($results);
@@ -26,30 +26,25 @@ class TitlesModel extends BaseModel
         return new Wrapper(data: $structure);
     }
 
-    public function searchByConsole($console)
+    public function searchByConsole($console): object
     {
         return $this->read(select: "title AS Game_Name, platform AS Console, date AS Year", from: $this->table, where: ['platform LIKE' => $console['console']]);
     }
 
-    private function createGameStructure(array $results)
+    private function createGameStructure(array $results): array
     {
-        $structure = [];
-
-        foreach ($results as $values)
-        {
-            $structure[] = [
-                'Game Title' => $values['Game_Name'],
-                'Year' => $values['Year'],
-                'Console' => $values['Console'],
-            ];
-        };
-
-        return $structure;
+        return array_map(
+            fn($game) => [
+                'Game Title' => $game['Game_Name'],
+                'Year' => $game['Year'],
+                'Console' => $game['Console']
+            ],
+            $results
+        );
     }
 
     private function createConsolesStructure(array $results)
     {
-        $consoles = [];
         foreach($results as $item)
         {
             $consoles[] = $item['Console'];
