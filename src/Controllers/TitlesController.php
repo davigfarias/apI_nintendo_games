@@ -2,71 +2,42 @@
 
 namespace Src\Controllers;
 
-use Src\Model\TitlesModel;
+use Src\Models\TitlesModel;
+use Src\Controllers\Controller;
 
-class TitlesController
+class TitlesController extends Controller
 {
-    public function titles()
-    {
-       $model = new TitlesModel();
-       $results = $model->getAll();
-
-        $resultsGames = [];
-
-        foreach($results as $value)
-        {
-            $resultsGames[] = [
-                'Game Title: ' => $value['Game_Name'],
-                'Year: ' => $value['Year'],
-                'Console: ' => $value['Console']
-            ];
-        }
-
-       echo json_encode($resultsGames);
+    public function __constructor(){
+        parent::__constructor();
     }
 
-    public function consolesOnly()
+    public function titles(): Response
+    {
+       $model = new TitlesModel();
+       $this->answer->setHeader('Content-Type', 'application/json');
+       
+       $this->answer($model->getAll());
+    }
+
+    public function consolesOnly(): Response
     {
         $model = new TitlesModel();
-        $results = $model->getConsoles();
+        $this->answer->setHeader('Content-Type', 'application/json');
 
-        $consoles = [];
-        foreach ($results as $item) 
-        {
-            $consoles[] = $item['Console']; 
-        }
-
-        $consoleString = implode(", ", $consoles);
-
-        echo json_encode(['consoles' => $consoleString]);
+        $this->answer($model->getConsoles());
      }
 
-    public function searchByConsole($console)
+    public function searchByConsole($console): Response
     {
         $model = new TitlesModel();
-        $results = $model->searchByConsole($console);
+        $this->answer->setHeader('Content-Type', 'application/json');
 
-        if(!$results)
-        {
-           echo $this->errorConsole($console);
-        }
-
-        $resultsGames = [];
-
-        foreach($results as $value)
-        {
-            $resultsGames[] = [
-                'Game Title: ' => $value['Game_Name'],
-                'Year: ' => $value['Year'],
-                'Console: ' => $value['Console']
-            ];
-        }
-
-       echo json_encode($resultsGames);
+        $this->answer($model->searchByConsole($console));
      }
 
-     private function errorConsole($console)
+     private function errorConsole($console): Response
      {
-        return json_encode(['error' => "There is no database for the console '{$console['console']}'"]);
+        $this->answer->setHeader('Content-Type', 'application/json');
+        return $this->answer(['error' => "There is no database for the console '{$console['console']}'"]) 
      }
 }
