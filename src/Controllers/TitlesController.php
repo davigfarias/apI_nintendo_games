@@ -7,37 +7,39 @@ use Src\Controllers\Controller;
 
 class TitlesController extends Controller
 {
-    public function __constructor(){
-        parent::__constructor();
+    protected TitlesModel $model;
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->model = new TitlesModel();
     }
 
     public function titles(): Response
     {
-       $model = new TitlesModel();
-       $this->answer->setHeader('Content-Type', 'application/json');
+       $this->response->setHeader('Content-Type', 'application/json');
        
-       $this->answer($model->getAll());
+       $this->answer($this->model->getAll());
     }
 
     public function consolesOnly(): Response
     {
-        $model = new TitlesModel();
-        $this->answer->setHeader('Content-Type', 'application/json');
+        $this->response->setHeader('Content-Type', 'application/json');
 
-        $this->answer($model->getConsoles());
+        $this->answer($this->model->getConsoles());
      }
 
     public function searchByConsole($console): Response
     {
-        $model = new TitlesModel();
-        $this->answer->setHeader('Content-Type', 'application/json');
+        $this->response->setHeader('Content-Type', 'application/json');
 
         $this->answer($model->searchByConsole($console));
      }
 
      private function errorConsole($console): Response
      {
-        $this->answer->setHeader('Content-Type', 'application/json');
-        return $this->answer(['error' => "There is no database for the console '{$console['console']}'"]) 
+        $this->response->setHeader('Content-Type', 'application/json');
+
+        return $this->answer(['error' => "There is no database for the console '{$console['console']}'"]); 
      }
 }
